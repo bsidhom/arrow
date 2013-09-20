@@ -51,7 +51,6 @@ class DateTimeParser(object):
         'SSSSS': _ONE_THROUGH_FIVE_DIGIT_RE,
         'SSSS': _ONE_THROUGH_FOUR_DIGIT_RE,
         'SSS': _ONE_TWO_OR_THREE_DIGIT_RE,
-        'SSS': _ONE_TWO_OR_THREE_DIGIT_RE,
         'SS': _ONE_OR_TWO_DIGIT_RE,
         'S': re.compile('\d'),
     }
