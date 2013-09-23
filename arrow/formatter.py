@@ -9,7 +9,12 @@ from arrow import util, locales
 
 class DateTimeFormatter(object):
 
-    _FORMAT_RE = re.compile('(YYY?Y?|MM?M?M?|DD?D?D?|d?dd?d?|HH?|hh?|mm?|ss?|SS?S?|ZZ?|a|A|X)')
+    # original: _FORMAT_RE = re.compile('(YYY?Y?|MM?M?M?|DD?D?D?|d?dd?d?|HH?|hh?|mm?|ss?|SS?S?|ZZ?|a|A|X)')
+    # backtracking: _FORMAT_RE = re.compile('(\[(?:\\]|[^]])*?\]|YYY?Y?|MM?M?M?|DD?D?D?|d?dd?d?|HH?|hh?|mm?|ss?|SS?S?|ZZ?|a|A|X)')
+    # emulating atomic matching:
+    _FORMAT_RE = re.compile('(\[(?:(?=(?P<literal>\\\\\[|\\\\\]|[^]]))(?P=literal))*\]|YYY?Y?|MM?M?M?|DD?D?D?|d?dd?d?|HH?|hh?|mm?|ss?|SS?S?|ZZ?|a|A|X)')
+
+    _ESCAPED_BRACKET_RE = re.compile('\\\\(\[|\])')
 
     def __init__(self, locale='en_us'):
 
@@ -20,6 +25,9 @@ class DateTimeFormatter(object):
         return cls._FORMAT_RE.sub(lambda m: cls._format_token(dt, m.group(0)), fmt)
 
     def _format_token(self, dt, token):
+
+        if token.startswith('[') and token.endswith(']'):
+            return self._ESCAPED_BRACKET_RE.sub(lambda m: m.group(1), token[1:-1])
 
         if token == 'YYYY':
             return '{0:04d}'.format(dt.year)

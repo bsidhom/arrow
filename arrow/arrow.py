@@ -546,6 +546,12 @@ class Arrow(object):
 
             >>> arrow.utcnow().format('MMMM DD, YYYY')
             'May 09, 2013'
+
+            >>> arrow.utcnow().format('HH[h]mm')
+            '03h56'
+
+            >>> arrow.utcnow().format('[this \[text\] is esaped] MMMM DD, YYYY')
+            'this [text] is escaped May 09, 2013'
         '''
 
         return formatter.DateTimeFormatter(locale).format(self._datetime, fmt)
