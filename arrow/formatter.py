@@ -12,7 +12,7 @@ class DateTimeFormatter(object):
     # original: _FORMAT_RE = re.compile('(YYY?Y?|MM?M?M?|DD?D?D?|d?dd?d?|HH?|hh?|mm?|ss?|SS?S?|ZZ?|a|A|X)')
     # backtracking: _FORMAT_RE = re.compile('(\[(?:\\]|[^]])*?\]|YYY?Y?|MM?M?M?|DD?D?D?|d?dd?d?|HH?|hh?|mm?|ss?|SS?S?|ZZ?|a|A|X)')
     # emulating atomic matching:
-    _FORMAT_RE = re.compile('(\[(?:(?=(?P<literal>\\\\\[|\\\\\]|[^]]))(?P=literal))*\]|YYY?Y?|MM?M?M?|DD?D?D?|d?dd?d?|HH?|hh?|mm?|ss?|SS?S?|ZZ?|a|A|X)')
+    _FORMAT_RE = re.compile('(\[(?:(?=(?P<literal>\\\\\[|\\\\\]|[^]]))(?P=literal))*\]|YYY?Y?|MM?M?M?|DD?D?D?|d?dd?d?|HH?|hh?|mm?|ss?|SS?S?S?S?S?|ZZ?|a|A|X)')
 
     _ESCAPED_BRACKET_RE = re.compile('\\\\(\[|\])')
 
@@ -78,6 +78,12 @@ class DateTimeFormatter(object):
         if token == 's':
             return str(dt.second)
 
+        if token == 'SSSSSS':
+            return str(int(dt.microsecond))
+        if token == 'SSSSS':
+            return str(int(dt.microsecond / 10))
+        if token == 'SSSS':
+            return str(int(dt.microsecond / 100))
         if token == 'SSS':
             return str(int(dt.microsecond / 1000))
         if token == 'SS':
